@@ -152,7 +152,7 @@ CREATE DATABASE restaurant_db;
 
 ```properties
 spring.datasource.username=root
-spring.datasource.password=votre_mot_de_passe
+spring.datasource.password=${DB_PASSWORD}
 ```
 
 3. Démarrer l'API :
