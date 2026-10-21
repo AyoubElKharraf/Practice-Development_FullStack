@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Affichage des Informations - TP1</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+
+    <div class="card">
+        <h2>✅ Informations Reçues</h2>
+        <p class="subtitle">Voici les données transmises par le contrôleur Spring Boot :</p>
+
+        <div class="result-list">
+            <div class="result-item">
+                <span class="label">Nom :</span>
+                <span class="value" th:text="${nom}">Dupont</span>
+            </div>
+
+            <div class="result-item">
+                <span class="label">Prénom :</span>
+                <span class="value" th:text="${prenom}">Jean</span>
+            </div>
+
+            <div class="result-item">
+                <span class="label">Email :</span>
+                <span class="value" th:text="${email}">jean.dupont@example.com</span>
+            </div>
+
+            <div class="result-item">
+                <span class="label">Filière :</span>
+                <span class="value badge" th:text="${filiere}">Master M2I</span>
+            </div>
+        </div>
+
+        <a href="/" class="btn btn-secondary">⬅ Retour au formulaire</a>
+    </div>
+
+</body>
+</html>

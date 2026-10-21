@@ -1,0 +1,51 @@
+# =========================================================================
+# ANGULAR / NODEJS (Front-end)
+# =========================================================================
+# Dépendances
+**/node_modules/
+**/dist/
+**/tmp/
+**/out-tsc/
+**/.sass-cache/
+
+# Fichiers de configuration locale / Logs
+**/.npm/
+**/npm-debug.log*
+**/yarn-debug.log*
+**/yarn-error.log*
+
+# =========================================================================
+# SPRING BOOT / JAVA (Back-end)
+# =========================================================================
+# Fichiers de build (Maven / Gradle)
+**/target/
+**/.gradle/
+**/build/
+
+# Fichiers de configuration sensibles (Contient vos mots de passe DB !)
+**/src/main/resources/application-local.properties
+**/src/main/resources/application-local.yml
+
+# Logs d'application
+**/*.log
+
+# =========================================================================
+# BASES DE DONNÉES (MySQL & PostgreSQL)
+# =========================================================================
+# Fichiers de données ou dumps locaux
+**/*.sql
+**/db_data/
+**/.postgresql/
+**/.mysql/
+
+# =========================================================================
+# ENVIRONNEMENT & IDE (VS Code, IntelliJ, Eclipse)
+# =========================================================================
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store

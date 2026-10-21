@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Saisie des Informations - TP1</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+</head>
+<body>
+
+    <div class="card">
+        <h2>📝 Saisie des Informations</h2>
+        <p class="subtitle">Remplissez le formulaire ci-dessous pour envoyer vos données.</p>
+
+        <form action="/afficher" method="POST">
+            <div class="form-group">
+                <label for="nom">Nom :</label>
+                <input type="text" id="nom" name="nom" placeholder="Ex: Dupont" required>
+            </div>
+
+            <div class="form-group">
+                <label for="prenom">Prénom :</label>
+                <input type="text" id="prenom" name="prenom" placeholder="Ex: Jean" required>
+            </div>
+
+            <div class="form-group">
+                <label for="email">Adresse Email :</label>
+                <input type="email" id="email" name="email" placeholder="Ex: jean.dupont@example.com" required>
+            </div>
+
+            <div class="form-group">
+                <label for="filiere">Filière / Spécialité :</label>
+                <input type="text" id="filiere" name="filiere" placeholder="Ex: Master M2I" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Envoyer et Afficher</button>
+        </form>
+    </div>
+
+</body>
+</html>

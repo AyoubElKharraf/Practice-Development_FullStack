@@ -1,0 +1,61 @@
+<main class="shell">
+  <header class="topbar">
+    <div><p class="eyebrow">TABLEAU DE BORD</p><h1>RestoPilot</h1></div>
+    <span class="date">{{ today | date:'EEEE d MMMM yyyy' }}</span>
+  </header>
+  <nav class="tabs">
+    <button [class.active]="tab === 'menu'" (click)="tab = 'menu'">🍽️ Carte</button>
+    <button [class.active]="tab === 'employees'" (click)="tab = 'employees'">👥 Équipe</button>
+    <button [class.active]="tab === 'orders'" (click)="tab = 'orders'">🧾 Commandes</button>
+  </nav>
+  @if (message) { <div class="notice success">{{ message }}</div> }
+  @if (error) { <div class="notice error">{{ error }}</div> }
+
+  @if (tab === 'menu') {
+    <section class="layout">
+      <article class="card form-card">
+        <h2>{{ editingMenuId ? 'Modifier le plat' : 'Ajouter un plat' }}</h2>
+        <form (ngSubmit)="saveMenu()" #menu="ngForm">
+          <label>Nom<input name="name" [(ngModel)]="menuForm.name" required></label>
+          <label>Description<textarea name="description" [(ngModel)]="menuForm.description"></textarea></label>
+          <div class="row"><label>Prix (€)<input name="price" type="number" min="0" step=".01" [(ngModel)]="menuForm.price" required></label><label>Catégorie<input name="category" [(ngModel)]="menuForm.category" required></label></div>
+          <label class="check"><input type="checkbox" name="available" [(ngModel)]="menuForm.available"> Disponible à la vente</label>
+          <button class="primary" [disabled]="menu.invalid">{{ editingMenuId ? 'Enregistrer' : 'Ajouter le plat' }}</button>
+          @if (editingMenuId) { <button type="button" class="link" (click)="resetMenu()">Annuler</button> }
+        </form>
+      </article>
+      <article class="card"><div class="card-title"><h2>Plats de la carte</h2><span class="count">{{ menuItems.length }}</span></div>
+        <div class="table-wrap"><table><thead><tr><th>Plat</th><th>Catégorie</th><th>Prix</th><th>Statut</th><th></th></tr></thead>
+        <tbody>@for (item of menuItems; track item.id) { <tr><td><strong>{{ item.name }}</strong><small>{{ item.description }}</small></td><td>{{ item.category }}</td><td>{{ item.price | number:'1.2-2' }} €</td><td><span class="pill" [class.off]="!item.available">{{ item.available ? 'Disponible' : 'Indisponible' }}</span></td><td class="actions"><button (click)="editMenu(item)">Modifier</button><button class="danger" (click)="deleteMenu(item.id)">Supprimer</button></td></tr> } @empty { <tr><td colspan="5" class="empty">Aucun plat enregistré.</td></tr> }</tbody></table></div>
+      </article>
+    </section>
+  }
+  @if (tab === 'employees') {
+    <section class="layout">
+      <article class="card form-card"><h2>{{ editingEmployeeId ? 'Modifier l’employé' : 'Ajouter un employé' }}</h2>
+        <form (ngSubmit)="saveEmployee()" #employee="ngForm">
+          <div class="row"><label>Prénom<input name="firstName" [(ngModel)]="employeeForm.firstName" required></label><label>Nom<input name="lastName" [(ngModel)]="employeeForm.lastName" required></label></div>
+          <label>Rôle<input name="role" placeholder="Serveur, Cuisinier..." [(ngModel)]="employeeForm.role" required></label>
+          <label>Email<input name="email" type="email" [(ngModel)]="employeeForm.email" required></label><label>Téléphone<input name="phone" [(ngModel)]="employeeForm.phone" required></label>
+          <button class="primary" [disabled]="employee.invalid">{{ editingEmployeeId ? 'Enregistrer' : 'Ajouter l’employé' }}</button>
+          @if (editingEmployeeId) { <button type="button" class="link" (click)="resetEmployee()">Annuler</button> }
+        </form>
+      </article>
+      <article class="card"><div class="card-title"><h2>Équipe</h2><span class="count">{{ employees.length }}</span></div><div class="table-wrap"><table><thead><tr><th>Nom</th><th>Rôle</th><th>Contact</th><th></th></tr></thead><tbody>
+        @for (person of employees; track person.id) { <tr><td><strong>{{ person.firstName }} {{ person.lastName }}</strong></td><td><span class="role">{{ person.role }}</span></td><td><small>{{ person.email }}<br>{{ person.phone }}</small></td><td class="actions"><button (click)="editEmployee(person)">Modifier</button><button class="danger" (click)="deleteEmployee(person.id)">Supprimer</button></td></tr> } @empty { <tr><td colspan="4" class="empty">Aucun employé enregistré.</td></tr> }
+      </tbody></table></div></article>
+    </section>
+  }
+  @if (tab === 'orders') {
+    <section class="layout">
+      <article class="card form-card"><h2>Nouvelle commande</h2>
+        <label>Employé assigné<select [(ngModel)]="selectedEmployeeId"><option [ngValue]="undefined">Non assigné</option>@for (person of employees; track person.id) { <option [ngValue]="person.id">{{ person.firstName }} {{ person.lastName }}</option> }</select></label>
+        <label>Statut<select [(ngModel)]="orderStatus">@for (status of statuses; track status) { <option [ngValue]="status">{{ label(status) }}</option> }</select></label>
+        <div class="add-line"><select [(ngModel)]="selectedMenuId"><option [ngValue]="undefined">Choisir un plat</option>@for (item of menuItems; track item.id) { @if (item.available) { <option [ngValue]="item.id">{{ item.name }} — {{ item.price | number:'1.2-2' }} €</option> } }</select><input type="number" min="1" [(ngModel)]="quantity"><button type="button" class="secondary" (click)="addLine()">Ajouter</button></div>
+        <ul class="lines">@for (line of orderLines; track $index) { <li>{{ menuName(line.menuItemId) }} <span>x{{ line.quantity }} <button type="button" class="link" (click)="removeLine($index)">Retirer</button></span></li> } @empty { <li class="empty">Ajoutez au moins un plat.</li> }</ul>
+        <button class="primary" [disabled]="!orderLines.length" (click)="saveOrder()">Créer la commande</button>
+      </article>
+      <article class="card"><div class="card-title"><h2>Commandes récentes</h2><span class="count">{{ orders.length }}</span></div><div class="orders">@for (order of orders; track order.id) { <div class="order"><div><strong>#{{ order.id }}</strong><small>{{ order.orderDate | date:'dd/MM/yyyy HH:mm' }} · {{ order.assignedEmployee?.firstName || 'Non assigné' }}</small></div><span class="pill status-{{ order.status.toLowerCase() }}">{{ label(order.status) }}</span><strong>{{ total(order) | number:'1.2-2' }} €</strong><button class="danger" (click)="deleteOrder(order.id)">Supprimer</button></div> } @empty { <p class="empty">Aucune commande enregistrée.</p> }</div></article>
+    </section>
+  }
+</main>
